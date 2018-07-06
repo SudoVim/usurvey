@@ -7,3 +7,21 @@ database backend. For this app:
 - The answers are recorded and displayed to the admin.
 - However, only the latest answer a specific guest has given will be shown.
 - The app is viewable on both desktop and mobile.
+
+Getting Started
+===============
+
+To get started, ensure you have Python (version 3 or greater) and virtualenv
+installed. Create an environment using virtualenv. For me, this was::
+
+    $ virtualenv -p `which python3` env
+
+Now, activate the environment::
+
+    $ . env/bin/activate
+
+This will prepend the ``(env)`` string to the beginning of your shell and will
+use the environment under the ``env`` directory as your environment. Now, you
+can install the necessary packages with::
+
+    $ pip3 install -r requirements.txt
