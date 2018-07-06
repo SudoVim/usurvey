@@ -1,0 +1,9 @@
+usurvey is a microsurvey app written in Django optimized for use with a MySQL
+database backend. For this app:
+
+- Admins can submit survey questions with multiple choice answers.
+- Guests can visit the app using their browser, and they will receive a random
+  survey question that they can answer.
+- The answers are recorded and displayed to the admin.
+- However, only the latest answer a specific guest has given will be shown.
+- The app is viewable on both desktop and mobile.
