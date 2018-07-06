@@ -11,8 +11,52 @@ database backend. For this app:
 Getting Started
 ===============
 
-To get started, ensure you have Python (version 3 or greater) and virtualenv
-installed. Create an environment using virtualenv. For me, this was::
+I was using Ubuntu 14.04 when making this project. As such, to install MySQL
+(and the necessary dependencies that our Python requirements have) I ran the
+following::
+
+    $ sudo apt-get install mysql-server libmysqlclient-dev
+
+This is important because the Python environment requires the "mysql_config"
+utility in order to install "mysqlclient". Once you have the backend
+database installed locally, it should (hopefully) already be running. If it's
+not, look up the documentation on how to get it started. For me, it was already
+running, but I could have started it with::
+
+    $ sudo service mysql start
+
+For the MySQL server, I'm just using the username "root" and the password
+"password". Obviously, this will not fly for a production environment, but it's
+good enough to get us off the ground. By default, the database should not be
+accessible outside of your machine. Now, let's create our database::
+
+    $ mysql -u root -p
+    Enter password: 
+    Welcome to the MySQL monitor.  Commands end with ; or \g.
+    Your MySQL connection id is 48
+    Server version: 5.5.60-0ubuntu0.14.04.1 (Ubuntu)
+
+    Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+    Oracle is a registered trademark of Oracle Corporation and/or its
+    affiliates. Other names may be trademarks of their respective
+    owners.
+
+    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+    mysql> create database usurvey;
+    Query OK, 1 row affected (0.01 sec)
+    mysql > quit
+    Bye
+    $
+
+Now, that we have mysql and our database installed and running, we can focus on
+the Python and Django dependencies. First, ensure you have Python (version 3 or
+greater) and virtualenv installed. For Ubuntu 14.04, this is probably::
+
+    sudo apt-get install python3 python-virtualenv
+
+Now, we can create an environment using virtualenv. For me, this was::
 
     $ virtualenv -p `which python3` env
 
@@ -21,7 +65,24 @@ Now, activate the environment::
     $ . env/bin/activate
 
 This will prepend the ``(env)`` string to the beginning of your shell and will
-use the environment under the ``env`` directory as your environment. Now, you
-can install the necessary packages with::
+use the environment under the ``env`` directory as your environment. Every time
+you open a new shell, you have to "activate" it. You can "deactivate" the
+environment later (not now) using::
 
-    $ pip3 install -r requirements.txt
+    (env)$ deactivate
+
+Now, you can install the necessary packages with::
+
+    (env)$ pip3 install -r requirements.txt
+
+At this point, we can start using Django! First (and every time new changes are
+pulled), you need to migrate the database. This is done with::
+
+    (env)$ ./manage.py migrate
+
+Now, we can finally start the server::
+
+    (env)$ ./manage.py runserver
+
+It should be accessible from your browser as "localhost:8000". Obviously, this
+is configurable, but it's good enough for development and functional testing.
