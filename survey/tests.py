@@ -7,6 +7,12 @@ from .models import SurveyQuestion
 class TestSurveyQuestion(TestCase):
 
     def test_random(self):
+        # Without any entries, we'll get an index error.
+        self.assertRaises(
+            IndexError,
+            SurveyQuestion.random,
+        )
+
         q1 = SurveyQuestion.objects.create(question='Q1')
         q1.answers.create(answer='Y')
         q1.answers.create(answer='N')
