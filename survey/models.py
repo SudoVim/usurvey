@@ -44,3 +44,6 @@ class SurveyResponse(models.Model):
         related_name='responses',
         on_delete=models.CASCADE,
     )
+
+    class Meta:
+        unique_together = (('ip', 'question'),)
