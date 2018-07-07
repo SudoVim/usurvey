@@ -80,7 +80,12 @@ pulled), you need to migrate the database. This is done with::
 
     (env)$ ./manage.py migrate
 
-Now, we can finally start the server::
+Now, we can create our superuser that we'll use to generate questions. This
+only needs to be done once.::
+
+    (env)$ ./manage.py createsuperuser
+
+Finally, we can start the server::
 
     (env)$ ./manage.py runserver
 
