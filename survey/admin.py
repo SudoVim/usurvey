@@ -1,7 +1,7 @@
 from django.db import models
 from django.forms import widgets
 from django.contrib import admin
-from .models import SurveyQuestion, SurveyAnswer, SurveyResult, SurveyResponse
+from .models import SurveyQuestion, SurveyAnswer, SurveyResponse
 
 class SurveyAnswerInline(admin.TabularInline):
     model = SurveyAnswer
@@ -17,12 +17,6 @@ class SurveyAnswerInline(admin.TabularInline):
         models.TextField: {'widget': widgets.TextInput},
     }
 
-@admin.register(SurveyQuestion)
-class SurveyQuestionAdmin(admin.ModelAdmin):
-    inlines = [
-        SurveyAnswerInline,
-    ]
-
 def delete_results(modeladmin, request, queryset):
     """
         Delete all results for the given survey questions.
@@ -30,11 +24,28 @@ def delete_results(modeladmin, request, queryset):
     SurveyResponse.objects.filter(question__in=queryset).delete()
 delete_results.short_description = "Delete results"
 
-@admin.register(SurveyResult)
-class SurveyResultAdmin(admin.ModelAdmin):
+@admin.register(SurveyQuestion)
+class SurveyQuestionAdmin(admin.ModelAdmin):
+    inlines = [
+        SurveyAnswerInline,
+    ]
     actions = [delete_results]
+    change_form_template = 'admin/surveyquestion_change_form.html'
 
-    def get_actions(self, request):
-        actions = super().get_actions(request)
-        actions.pop('delete_selected', None)
-        return actions
+    def changeform_view(self, request, *args, **kwargs):
+        response = super().changeform_view(request, *args, **kwargs)
+
+        if hasattr(response, 'context_data'):
+            question = response.context_data['original']
+
+            if question is not None:
+                total_responses = question.responses.count()
+                response.context_data['total_responses'] = total_responses
+                response.context_data['summary'] = question.answers.\
+                    values('answer').\
+                    annotate(
+                        num_responses=models.Count('responses'),
+                    ).\
+                    order_by('-num_responses')
+
+        return response

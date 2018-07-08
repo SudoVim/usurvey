@@ -1,0 +1,46 @@
+{% extends "admin/change_form.html" %}
+
+{% load mathfilters %}
+
+{% block title %}
+
+{% if original.question %}
+    Question: {{ original.question }}
+{% else %}
+    New Question
+{% endif %}
+
+{% endblock %}
+
+{% block content_title %}
+
+{% if original.question %}
+    <h1> Question: {{ original.question }} </h1>
+{% else %}
+    <h1>New Question</h1>
+{% endif %}
+
+{% endblock %}
+
+{% block form_top %}
+{% if original.question %}
+    <p>{{ total_responses }} response(s)</p>
+    <table>
+        <tr>
+            <th>Answer</th>
+            <th>Responses</th>
+            <th>Percent</th>
+        </tr>
+    {% for row in summary %}
+        <tr>
+            <td>{{ row.answer }}</td>
+            <td>{{ row.num_responses }}</td>
+            <td>{{ row.num_responses|div:total_responses|mul:100.0 }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <br>
+    <h1>Change Question</h1>
+{% endif %}
+{% endblock %}

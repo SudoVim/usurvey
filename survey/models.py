@@ -58,14 +58,3 @@ class SurveyResponse(models.Model):
 
     class Meta:
         unique_together = (('ip', 'question'),)
-
-class SurveyResult(SurveyQuestion):
-    """
-        proxy model for class:`SurveyQuestion` for displaying its results in an
-        admin view
-    """
-
-    class Meta:
-        proxy = True
-        verbose_name = 'Survey Result'
-        verbose_name_plural = 'Survey Results'
