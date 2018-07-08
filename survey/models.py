@@ -9,17 +9,28 @@ class SurveyQuestion(models.Model):
         return self.question
 
     @classmethod
-    def random(cls):
+    def random_for_ip(cls, ip):
         """
-            get a random entry
+            get a random entry for the given IP address or ``None`` if none
+            remain
         """
-        max_pk = cls.objects.values_list('pk', flat=True).order_by('-pk')[0]
-        while True:
+        tries = 5
+        query = models.Q(~models.Q(responses__ip=ip))
+        while tries > 0:
             try:
-                return cls.objects.get(pk=random.randint(1, max_pk))
+                num = cls.objects.filter(query).count()
+                if not num:
+                    return None
 
-            except cls.DoesNotExist:
-                pass
+                return cls.objects.filter(query)[random.randint(0, num-1)]
+
+            # Detected a race condition whereby our random index does not match
+            # a valid entry. Just try again.
+            except IndexError:
+                tries -= 1
+
+        return None
+
 
 class SurveyAnswer(models.Model):
     question = models.ForeignKey(

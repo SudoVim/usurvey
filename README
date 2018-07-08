@@ -5,7 +5,7 @@ database backend. For this app:
 - Guests can visit the app using their browser, and they will receive a random
   survey question that they can answer.
 - The answers are recorded and displayed to the admin.
-- However, only the latest answer a specific guest has given will be shown.
+- Guests should not see the same question twice.
 - The app is viewable on both desktop and mobile.
 
 Getting Started
