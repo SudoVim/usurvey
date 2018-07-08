@@ -8,6 +8,12 @@ database backend. For this app:
 - Guests should not see the same question twice.
 - The app is viewable on both desktop and mobile.
 
+Disclaimer
+==========
+
+This project is for demonstration purposes only. It was designed with
+production in mind, but it is not intended for production.
+
 Getting Started
 ===============
 
