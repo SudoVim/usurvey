@@ -1,5 +1,13 @@
+{% extends "survey/base.html" %}
+
+{% block title %}
+Answer Question
+{% endblock %}
+
+{% block body %}
 <h1>{{ question }}</h1>
 <form method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
 </form>
+{% endblock %}
