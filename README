@@ -91,3 +91,4 @@ Finally, we can start the server::
 
 It should be accessible from your browser as "localhost:8000". Obviously, this
 is configurable, but it's good enough for development and functional testing.
+To access the admin page, add "/admin" to the end of the URL string.
