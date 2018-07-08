@@ -1,5 +1,6 @@
 from django import forms
 from django.shortcuts import render
+from django.template.response import SimpleTemplateResponse
 from django.views.generic.edit import CreateView, UpdateView
 
 from .models import SurveyQuestion, SurveyResponse
@@ -29,10 +30,7 @@ class SurveyResponseForm(forms.ModelForm):
             'answer': forms.RadioSelect(),
         }
 
-class SurveyResponseViewMixin(object):
-    """
-        mixin object that applies to both create and update views
-    """
+class SurveyResponseView(CreateView):
     model = SurveyResponse
     form_class = SurveyResponseForm
     template_name = 'survey/surveyresponse.html'
@@ -47,45 +45,32 @@ class SurveyResponseViewMixin(object):
     def get_success_url(self):
         return '/'
 
-class SurveyResponseCreateView(SurveyResponseViewMixin, CreateView):
-    pass
-class SurveyResponseUpdateView(SurveyResponseViewMixin, UpdateView):
-
-    def get_object(self, *args, **kwargs):
-        return self.object
-
 def survey_response(request):
     """
         guest is requesting a survey question to answer
     """
+    view = SurveyResponseView()
     if request.method == 'GET':
-        # Randomly generate the question.
-        question = SurveyQuestion.random()
+        # Get the user's IP address from the metadata.
         ip = request.META['REMOTE_ADDR']
 
+        # Randomly generate the question.
+        question = SurveyQuestion.random_for_ip(ip)
+        if question is None:
+            return SimpleTemplateResponse(
+                'survey/surveyresponse_error.html',
+                {'error': 'There are no more questions to answer for now.'},
+            )
+
+    # The user is submitting an answer, query the ip/question from the POST
+    # data.
     else:
-        question = SurveyQuestion.objects.get(pk=int(request.POST['question']))
         ip = request.POST['ip']
+        question = SurveyQuestion.objects.get(pk=int(request.POST['question']))
 
-    # Check to see if an instance already exists
-    try:
-        instance = SurveyResponse.objects.get(
-            question=question,
-            ip=ip,
-        )
-
-    except SurveyResponse.DoesNotExist:
-        instance = None
-
-    view = None
-    if instance is None:
-        view = SurveyResponseCreateView()
-        view.initial = {'question': question, 'ip': ip}
-
-    else:
-        view = SurveyResponseUpdateView()
-        view.object = instance
-
+    # We need to get some initial values here. I don't like it, but that's what
+    # the "as_view" method does for class-based views.
+    view.initial = {'question': question, 'ip': ip}
     view.request = request
     view.args = tuple()
     view.kwargs = {}
