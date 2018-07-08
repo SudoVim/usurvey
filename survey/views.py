@@ -27,7 +27,7 @@ class SurveyResponseForm(forms.ModelForm):
         widgets = {
             'ip': forms.HiddenInput(),
             'question': forms.HiddenInput(),
-            'answer': forms.RadioSelect(),
+            'answer': forms.RadioSelect(attrs={'class': 'radio'}),
         }
 
 class SurveyResponseView(CreateView):

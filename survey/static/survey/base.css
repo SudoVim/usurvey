@@ -1,0 +1,48 @@
+html {
+    background: #169300;
+    font-family: sans-serif;
+}
+
+div {
+    background: #CBFEC1;
+    padding: 1em;
+    border-radius: .5em;
+}
+
+form ul {
+    list-style-type: none;
+    font-size: 2em;
+}
+
+form input.radio {
+    width: 2em;
+    height: 2em;
+}
+
+form .button {
+   border-color: #062800;
+   background: #169300;
+   background: -webkit-gradient(linear, left top, left bottom, from(#1DC100), to(#169300));
+   background: -webkit-linear-gradient(top, #1DC100, #169300);
+   background: -moz-linear-gradient(top, #1DC100, #169300);
+   background: -ms-linear-gradient(top, #1DC100, #169300);
+   background: -o-linear-gradient(top, #1DC100, #169300);
+   padding: .4em .5em;
+   border-radius: .5em;
+   color: white;
+   font-size: 1em;
+   text-decoration: none;
+   vertical-align: middle;
+}
+
+form .button:hover {
+   border-color: #062800;
+   background: #169300;
+   color: white;
+   cursor: pointer;
+}
+
+form .button:active {
+   border-color: #062800;
+   background: #169300;
+}
