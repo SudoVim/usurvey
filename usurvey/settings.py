@@ -25,7 +25,10 @@ SECRET_KEY = 'zp9at-on(a!by=avlg@$9zuclt0)$c#vb(p4ovhx21=)2g&^o)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+]
 
 
 # Application definition

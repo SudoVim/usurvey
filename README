@@ -91,4 +91,19 @@ Finally, we can start the server::
 
 It should be accessible from your browser as "localhost:8000". Obviously, this
 is configurable, but it's good enough for development and functional testing.
-To access the admin page, add "/admin" to the end of the URL string.
+To access the admin page, add "/admin" to the end of the URL string. If you
+want to allow other machines to access the web server, runserver should be run
+with the following argument::
+
+    (env)$ ./manage.py runserver 0.0.0.0:8000
+
+Also, you should append your machine's IP address to the end of
+``ALLOWED_HOSTS`` in the ``usurvey/settings.py`` file. This will tell Django
+to allow host connections over the network interface with the given IP. If
+running Linux, you'll probably also have to open a port in iptables::
+
+    (env)$ sudo iptables -I INPUT -p tcp --dport 8000 -j ACCEPT
+
+To delete the rule::
+
+    (env)$ sudo iptables -D INPUT -p tcp --dport 8000 -j ACCEPT
