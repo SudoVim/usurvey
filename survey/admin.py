@@ -1,7 +1,7 @@
 from django.db import models
 from django.forms import widgets
 from django.contrib import admin
-from .models import SurveyQuestion, SurveyAnswer
+from .models import SurveyQuestion, SurveyAnswer, SurveyResult, SurveyResponse
 
 class SurveyAnswerInline(admin.TabularInline):
     model = SurveyAnswer
@@ -17,9 +17,24 @@ class SurveyAnswerInline(admin.TabularInline):
         models.TextField: {'widget': widgets.TextInput},
     }
 
+@admin.register(SurveyQuestion)
 class SurveyQuestionAdmin(admin.ModelAdmin):
     inlines = [
         SurveyAnswerInline,
     ]
 
-admin.site.register(SurveyQuestion, SurveyQuestionAdmin)
+def delete_results(modeladmin, request, queryset):
+    """
+        Delete all results for the given survey questions.
+    """
+    SurveyResponse.objects.filter(question__in=queryset).delete()
+delete_results.short_description = "Delete results"
+
+@admin.register(SurveyResult)
+class SurveyResultAdmin(admin.ModelAdmin):
+    actions = [delete_results]
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        actions.pop('delete_selected', None)
+        return actions
